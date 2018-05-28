@@ -1,6 +1,6 @@
 GIT
-  remote: https://github.com/RundownApp/recurring_select.git
-  revision: b934e8d1fb20eb101086d1b03ecd766c97826eae
+  remote: https://github.com/gafemoyano/recurring_select.git
+  revision: 40c4f4122a2f2f30213eaeb86ae38bed89e6bab1
   specs:
     recurring_select (2.0.0)
       coffee-rails (>= 3.1)

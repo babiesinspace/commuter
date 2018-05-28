@@ -61,7 +61,7 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-gem 'recurring_select', github: "RundownApp/recurring_select"
+gem 'recurring_select', github: "gafemoyano/recurring_select"
 gem 'jquery-rails'
 gem 'momentjs-rails'
 gem 'fullcalendar'
