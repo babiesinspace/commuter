@@ -65,3 +65,5 @@ gem 'recurring_select', github: "RundownApp/recurring_select"
 gem 'jquery-rails'
 gem 'momentjs-rails'
 gem 'fullcalendar'
+gem 'devise'
+gem 'geocoder'

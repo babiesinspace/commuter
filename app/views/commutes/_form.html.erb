@@ -1,0 +1,44 @@
+<%= form_with(model: commute, local: true) do |form| %>
+  <% if commute.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(commute.errors.count, "error") %> prohibited this commute from being saved:</h2>
+
+      <ul>
+      <% commute.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :label %>
+    <%= form.text_field :label %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_time %>
+    <%= form.datetime_select :start_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :recurring %>
+    <%= form.select_recurring :recurring %>
+  </div>
+
+  <div class="field">
+    <%= form.label :location_id %>
+    <%= form.text_field :location_id %>
+  </div>
+  
+  <%= f.fields_for :location do |location_form| %>
+
+    <div class="field">
+        Task: <%= location_form.text_field :address %>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

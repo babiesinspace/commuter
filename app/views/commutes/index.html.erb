@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Commutes</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Label</th>
+      <th>Start time</th>
+      <th>Recurring</th>
+      <th>Location</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @commutes.each do |commute| %>
+      <tr>
+        <td><%= commute.label %></td>
+        <td><%= commute.start_time %></td>
+        <td><%= commute.recurring %></td>
+        <td><%= commute.location %></td>
+        <td><%= link_to 'Show', commute %></td>
+        <td><%= link_to 'Edit', edit_commute_path(commute) %></td>
+        <td><%= link_to 'Destroy', commute, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Commute', new_commute_path %>
