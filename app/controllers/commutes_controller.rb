@@ -69,6 +69,7 @@ class CommutesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def commute_params
-      params.require(:commute).permit(:label)
+      params.require(:commute).permit(:label, schedule_attributes: Schedulable::ScheduleSupport.param_names, location_attributes: :address)
+
     end
 end
