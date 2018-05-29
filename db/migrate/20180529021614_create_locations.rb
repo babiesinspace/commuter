@@ -4,7 +4,7 @@ class CreateLocations < ActiveRecord::Migration[5.2]
       t.string :address
       t.numeric :latitude
       t.numeric :longitude
-      t.references :locatable, foreign_key: true
+      t.references :locatable, polymorphic: true, index: true
 
       t.timestamps
     end
