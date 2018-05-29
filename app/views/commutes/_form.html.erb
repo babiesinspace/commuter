@@ -1,0 +1,22 @@
+<%= form_with(model: commute, local: true) do |form| %>
+  <% if commute.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(commute.errors.count, "error") %> prohibited this commute from being saved:</h2>
+
+      <ul>
+      <% commute.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :label %>
+    <%= form.text_field :label %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
