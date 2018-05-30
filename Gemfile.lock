@@ -102,6 +102,8 @@ GEM
       domain_name (~> 0.5)
     http-form_data (2.1.0)
     http_parser.rb (0.6.0)
+    httparty (0.16.2)
+      multi_xml (>= 0.5.2)
     i18n (1.0.1)
       concurrent-ruby (~> 1.0)
     ice_cube (0.16.2)
@@ -127,6 +129,7 @@ GEM
     minitest (5.11.3)
     msgpack (1.2.4)
     multi_json (1.13.1)
+    multi_xml (0.6.0)
     nio4r (2.3.1)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
@@ -238,6 +241,7 @@ DEPENDENCIES
   figaro
   geocoder
   googlemaps-services
+  httparty
   ice_cube
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
