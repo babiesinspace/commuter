@@ -29,6 +29,9 @@ Reminder.joins(commute: [:location]).pluck(:start_time, :address)
 
 ///
 
+https://maps.googleapis.com/maps/api/directions/json?&mode=transit&origin=540+saint+johns+place+brooklyn+ny+11238&destination=90+john+street+new+york+ny&arrival_time=1527699039&key=AIzaSyArxzeiN4HHA34q1ncsyPaCIC4bzQ4Mt0s
+
+
  directions.query(origin: '540 Saint Johns Place Brooklyn ny 11238', destination: r.commute.location.address, mode: 'transit', arrival_time: r.start_time, alternatives: true)
 
 
