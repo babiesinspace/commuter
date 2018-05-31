@@ -1,0 +1,28 @@
+arrive by = ["routes"][0]["legs"][0]["arrival_time"]["text"]
+
+departure = ["routes"][0]["legs"][0]["departure_time"]["text"]
+
+duration = ["routes"][0]["legs"][0]["duration"]["text"]
+
+start address = ["routes"][0]["legs"][0]["start_address"]
+
+end address = ["routes"][0]["legs"][0]["end_address"]
+
+transit directions = ["routes"][0]["legs"][0]["steps"].map {|step| step if step["travel_mode"] == "TRANSIT" }.compact 
+
+TRANSIT DIRECTIONS IS AN ARRAY OF TRANSIT STEPS
+
+see below - y is same as transit directions return
+
+"Subway" = y[0]["transit_details"]["line"]["vehicle"]["name"]
+
+"2" (subway line) = y[0]["transit_details"]["line"]["short_name"]
+
+"Franklin Ave" = y[0]["transit_details"]["departure_stop"]["name"]
+
+"8:36am" = y[0]["transit_details"]["departure_time"]["text"]
+
+"Fulton St" = y[0]["transit_details"]["arrival_stop"]["name"]
+
+"8:55am" = y[0]["transit_details"]["arrival_time"]["text"]
+
