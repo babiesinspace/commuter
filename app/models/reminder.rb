@@ -63,4 +63,35 @@ class Reminder < ApplicationRecord
     return (basic + instructions)
   end
 
+
+
+
+  def reminder
+    @twilio_number = ENV['TWILIO_NUMBER']
+    account_sid = ENV['TWILIO_ACCOUNT_SID']
+    @client = Twilio::REST::Client.new account_sid, ENV['TWILIO_AUTH_TOKEN']
+    reminder = self.format_text
+    message = @client.api.account.messages.create(
+      from: @twilio_number,
+      to: "19175093369",
+      body: reminder
+    )
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end
