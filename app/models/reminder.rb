@@ -1,12 +1,16 @@
 class Reminder < ApplicationRecord
-  belongs_to :commute
+  # belongs_to :commute
   delegate :duration, to: :commute
   after_create :generate_text_time
 
-  # Returns ActiveRecord::Relation with reminders
+  # Returns ActiveRecord::Relation with reminders.. needed?
   def self.grab_daily
-    self.where(start_time: Date.today.all_day)
+    self.where(text_time: Date.today.all_day)
   end 
+
+  def self.grab_hourly
+    Reminder.where(text_time: (Time.now.utc.beginning_of_hour..Time.now.utc.end_of_hour))
+  end
 
   def format_for_google
     # Reminder.find(self.id).joins(commute: [:location, :user]).pluck(:start_time, :latitude, :longitude, :home_latitude, :home_longitude)
@@ -49,11 +53,14 @@ class Reminder < ApplicationRecord
   def format_basic_info(response)
     arrival_time = response["arrival_time"]["text"]
     departure = response["departure_time"]["text"]
-    duration = response["duration"]["text"]
+    duration_string = response["duration"]["text"]
+    duration_seconds = response["duration"]["value"]
+    # generate_text_time(duration_seconds)
     start_address = response["start_address"]
     end_address = response["end_address"]
     "You need to leave from #{start_address} at #{departure}. It will take you #{duration} to get to #{end_address} at #{arrival_time} \n "
   end
+
   #routes holds an array of route options. MVP will have no alternatives, just the google first choice, so always grab the first
   #legs holds an array of 'legs' of the journey. if no waypoints are specified, this will only every hold one. MVP will not take way points, so only grab the first for now. 
   def format_text
@@ -72,7 +79,7 @@ class Reminder < ApplicationRecord
     response["duration"]["value"]
   end
 
-
+  #method call to send text
   def reminder
     @twilio_number = ENV['TWILIO_NUMBER']
     account_sid = ENV['TWILIO_ACCOUNT_SID']
@@ -85,10 +92,14 @@ class Reminder < ApplicationRecord
     )
   end
 
-  def generate_text_time
-    start = self.start_time
-    duration = self.commute.duration
-    time_to_send = start - duration.seconds - 15.minutes
+  #doesn't work yet
+  #set to nil for on create and use Commute's duration, otherwise update it when calling Google (necessary?)
+  def generate_text_time(duration=nil)
+    if duration == nil
+      start = self.start_time
+      duration = self.commute.duration
+    end
+    time_to_send = (start - duration.seconds - 15.minutes)
     #if reminder 
     if (time_to_send >= Time.now.utc) && (start >= Time.now.utc)
       self.update(text_time: time_to_send)
@@ -96,25 +107,9 @@ class Reminder < ApplicationRecord
       self.update(text_time: Time.now)
     else
       Reminder.find(self.id).destroy
+      return nil
     end
   end
-
-  def when_to_run
-    minutes_before_leaving = 15.minutes
-    self.text_time - minutes_before_leaving
-  end
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
