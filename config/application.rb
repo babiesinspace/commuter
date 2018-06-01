@@ -9,6 +9,7 @@ Bundler.require(*Rails.groups)
 
 module Commuter
   class Application < Rails::Application
+    require 'yaml'
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
 
