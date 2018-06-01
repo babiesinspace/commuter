@@ -88,11 +88,11 @@ class Reminder < ApplicationRecord
   def generate_text_time
     start = self.start_time
     duration = self.commute.duration
-    time_to_send = start - duration.seconds
-    #
+    time_to_send = start - duration.seconds - 15.minutes
+    #if reminder 
     if (time_to_send >= Time.now.utc) && (start >= Time.now.utc)
       self.update(text_time: time_to_send)
-    elsif time_to_send >= Time.now.utc
+    elsif start >= Time.now.utc
       self.update(text_time: Time.now)
     else
       Reminder.find(self.id).destroy
@@ -101,7 +101,7 @@ class Reminder < ApplicationRecord
 
   def when_to_run
     minutes_before_leaving = 15.minutes
-    time - minutes_before_leaving
+    self.text_time - minutes_before_leaving
   end
 
 
