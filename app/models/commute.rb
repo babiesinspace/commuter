@@ -6,21 +6,51 @@ class Commute < ApplicationRecord
   dependent: :destroy,
   as: :locatable
   accepts_nested_attributes_for :location 
-  after_create :generate_daily_on_create
   has_many :reminders
+  after_create :generate_daily_on_create, :next_occurrence
 
   def generate_daily_on_create
-    today = self.generate_daily
+    benchmark = self.create_benchmark
+    self.update(duration: benchmark)
+  end
+
+  def generate_daily
+    times = self.schedule.occurrences_between(Date.today.beginning_of_day, (Date.today.end_of_day))
+    times.map { |time| Reminder.create(commute_id: self.id, start_time: time.to_time) }
+  end 
+
+  #break this out, find a way to update it as they continue to use. 
+  def create_benchmark
+    times = self.schedule.occurrences_between(Date.today.beginning_of_day, (Date.today.end_of_day + 1.days))
+    today = times.map { |time| Reminder.create(commute_id: self.id, start_time: time.to_time) }
     previous = self.schedule.previous_occurrence(Time.now)
+    
     if today.first.start_time == previous.to_time
       previous = previous - 1.week
-    end
+    end    
+
     previous_reminder = Reminder.create(commute_id: self.id, start_time: previous.to_time)
     reminders = today.push(previous_reminder)
-    times = reminders.map { |r| r.duration_in_seconds }
-    commute_time = (times.reduce(:+) / times.length)
-    conservative_estimate = commute_time + (commute_time / 10)
-    self.update(duration: conservative_estimate)
+
+    commute_times = reminders.map { |r| r.duration_in_seconds }
+    avg_commute_time = (commute_times.reduce(:+) / commute_times.length)
+    conservative_estimate = avg_commute_time + (avg_commute_time / 10)
+  end 
+
+  def next_occurrence
+    next_reminder = self.schedule.next_occurrence
+    self.update(next_reminder_date: next_reminder)
+  end 
+
+end
+
+
+# next_event = self.next_reminder_date
+# #if this happened already
+# if !(next_event >= Date.today.end_of_day)
+
+
+
     # times = self.schedule.occurrences_between(Date.today.beginning_of_day, (Date.today.beginning_of_day + 1.days))
     # if times.any?
     #   times.map do |time| 
@@ -32,15 +62,3 @@ class Commute < ApplicationRecord
     #   previous = self.schedule.previous_occurrence(Time.now)
     #   first = self.schedule.first
     # end
-  end
-
-  def generate_daily
-    times = self.schedule.occurrences_between(Date.today.beginning_of_day, (Date.today.beginning_of_day + 2.days))
-    times.map { |time| Reminder.create(commute_id: self.id, start_time: time.to_time) }
-  end 
-
-  def create_benchmark
-
-  end 
-
-end
