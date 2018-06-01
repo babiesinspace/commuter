@@ -1,5 +1,7 @@
 class Reminder < ApplicationRecord
   belongs_to :commute
+  delegate :duration, to: :commute
+  after_create :generate_text_time
 
   # Returns ActiveRecord::Relation with reminders
   def self.grab_daily
@@ -63,7 +65,12 @@ class Reminder < ApplicationRecord
     return (basic + instructions)
   end
 
-
+  def duration_in_seconds
+    response = self.transit_data
+    #change this post-MVP, see above notes
+    response = response["routes"][0]["legs"][0]
+    response["duration"]["value"]
+  end
 
 
   def reminder
@@ -78,7 +85,24 @@ class Reminder < ApplicationRecord
     )
   end
 
+  def generate_text_time
+    start = self.start_time
+    duration = self.commute.duration
+    time_to_send = start - duration.seconds
+    #
+    if (time_to_send >= Time.now.utc) && (start >= Time.now.utc)
+      self.update(text_time: time_to_send)
+    elsif time_to_send >= Time.now.utc
+      self.update(text_time: Time.now)
+    else
+      Reminder.find(self.id).destroy
+    end
+  end
 
+  def when_to_run
+    minutes_before_leaving = 15.minutes
+    time - minutes_before_leaving
+  end
 
 
 
