@@ -56,10 +56,10 @@ class Reminder < ApplicationRecord
     departure = response["departure_time"]["text"]
     duration_string = response["duration"]["text"]
     duration_seconds = response["duration"]["value"]
-    # generate_text_time(duration_seconds)
+    generate_text_time(duration_seconds)
     start_address = response["start_address"]
     end_address = response["end_address"]
-    "You need to leave from #{start_address} at #{departure}. It will take you #{duration} to get to #{end_address} at #{arrival_time} \n "
+    "You need to leave from #{start_address} at #{departure}. It will take you #{duration_string} to get to #{end_address} at #{arrival_time} \n "
   end
 
   #routes holds an array of route options. MVP will have no alternatives, just the google first choice, so always grab the first
