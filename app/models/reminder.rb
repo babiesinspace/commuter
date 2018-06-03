@@ -1,5 +1,6 @@
 class Reminder < ApplicationRecord
-  # belongs_to :commute
+  belongs_to :commute
+  delegate :user, to: :commute
   delegate :duration, to: :commute
   after_create :generate_text_time
 

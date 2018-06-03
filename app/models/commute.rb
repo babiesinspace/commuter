@@ -1,4 +1,5 @@
 class Commute < ApplicationRecord
+  belongs_to :user
   acts_as_schedulable :schedule
   has_one :location,
   inverse_of: :locatable,
