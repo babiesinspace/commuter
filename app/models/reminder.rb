@@ -1,7 +1,8 @@
 class Reminder < ApplicationRecord
-  # belongs_to :commute
+  belongs_to :commute
+  delegate :user, to: :commute
   delegate :duration, to: :commute
-  after_create :generate_text_time
+  after_save :generate_text_time
 
   # Returns ActiveRecord::Relation with reminders.. needed?
   def self.grab_daily
@@ -55,10 +56,10 @@ class Reminder < ApplicationRecord
     departure = response["departure_time"]["text"]
     duration_string = response["duration"]["text"]
     duration_seconds = response["duration"]["value"]
-    # generate_text_time(duration_seconds)
+    generate_text_time(duration_seconds)
     start_address = response["start_address"]
     end_address = response["end_address"]
-    "You need to leave from #{start_address} at #{departure}. It will take you #{duration} to get to #{end_address} at #{arrival_time} \n "
+    "You need to leave from #{start_address} at #{departure}. It will take you #{duration_string} to get to #{end_address} at #{arrival_time} \n "
   end
 
   #routes holds an array of route options. MVP will have no alternatives, just the google first choice, so always grab the first
@@ -85,9 +86,10 @@ class Reminder < ApplicationRecord
     account_sid = ENV['TWILIO_ACCOUNT_SID']
     @client = Twilio::REST::Client.new account_sid, ENV['TWILIO_AUTH_TOKEN']
     reminder = self.format_text
+    send_to = self.user.phonenumber
     message = @client.api.account.messages.create(
       from: @twilio_number,
-      to: "19175093369",
+      to: send_to,
       body: reminder
     )
   end
@@ -95,16 +97,16 @@ class Reminder < ApplicationRecord
   #doesn't work yet
   #set to nil for on create and use Commute's duration, otherwise update it when calling Google (necessary?)
   def generate_text_time(duration=nil)
+    start = self.start_time
     if duration == nil
-      start = self.start_time
       duration = self.commute.duration
     end
     time_to_send = (start - duration.seconds - 15.minutes)
     #if reminder 
     if (time_to_send >= Time.now.utc) && (start >= Time.now.utc)
-      self.update(text_time: time_to_send)
+      self.text_time = time_to_send
     elsif start >= Time.now.utc
-      self.update(text_time: Time.now)
+      self.text_time = Time.now
     else
       Reminder.find(self.id).destroy
       return nil
