@@ -9,4 +9,5 @@ Rails.application.load_tasks
 task "resque:scheduler" => :environment do
   require 'resque'
   require 'resque-scheduler'
+  require 'jobs'
 end

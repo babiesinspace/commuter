@@ -1,0 +1,4 @@
+SetReminderTimeJob:
+  description: "desc"
+  queue: set_reminders
+  class: "SetReminderTimeJob"

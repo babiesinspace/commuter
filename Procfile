@@ -1,5 +1,4 @@
 ### Procfile ###
 
-web: bundle exec puma -t 5:5 -p ${PORT:-3000} -e ${RACK_ENV:-development}
-worker: env TERM_CHILD=1 QUEUE=* bundle exec rake environment resque:work
-scheduler: bundle exec rake resque:scheduler
+web: bundle exec puma -C config/puma.rb config.ru
+worker: bundle exec rake schedule_and_work COUNT=1 QUEUE=* TERM_CHILD=1 RESQUE_TERM_TIMEOUT=10
