@@ -1,6 +1,6 @@
 require 'resque/tasks'
 require 'resque/scheduler/tasks'
-require 'jobs'
+require '/jobs'
 
 # Scheduler needs very little cpu, just start it with a worker.
 desc "schedule and work, so we only need 1 dyno"
