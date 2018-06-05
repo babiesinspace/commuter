@@ -1,5 +1,9 @@
 class CommutesController < ApplicationController
   before_action :set_commute, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!, except: [:landing]
+
+  def landing
+  end 
 
   # GET /commutes
   # GET /commutes.json
