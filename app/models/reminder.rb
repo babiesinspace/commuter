@@ -1,4 +1,3 @@
-require 'byebug'
 class Reminder < ApplicationRecord
   belongs_to :commute
   delegate :user, to: :commute
