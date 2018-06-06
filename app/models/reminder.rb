@@ -1,3 +1,4 @@
+require 'byebug'
 class Reminder < ApplicationRecord
   belongs_to :commute
   delegate :user, to: :commute
@@ -67,9 +68,9 @@ class Reminder < ApplicationRecord
   def format_text
     response = self.transit_data
     #change this post-MVP, see above notes
-    response = response["routes"][0]["legs"][0]
-    basic = self.format_basic_info(response)
-    instructions = self.format_transit(response).join("\n")
+    directions = response["routes"][0]["legs"][0]
+    basic = self.format_basic_info(directions)
+    instructions = self.format_transit(directions).join("\n")
     return (basic + instructions)
   end
 
@@ -109,9 +110,11 @@ class Reminder < ApplicationRecord
     time_to_send = (start - duration.seconds - 15.minutes)
     #if reminder 
     if (time_to_send >= Time.now.utc) && (start >= Time.now.utc)
-      self.text_time = time_to_send
+      #self.text_time = time_to_send
+      self.update_column(:text_time, time_to_send)
     elsif start >= Time.now.utc
-      self.text_time = Time.now
+      #self.text_time = Time.now
+      self.update_column(:text_time, Time.now)
     else
       Reminder.find(self.id).destroy
       return nil

@@ -23,6 +23,7 @@ class CommutesController < ApplicationController
   # GET /commutes/new
   def new
     @commute = current_user.commutes.new
+    @commute.build_location
   end
 
   # GET /commutes/1/edit
@@ -33,12 +34,13 @@ class CommutesController < ApplicationController
   # POST /commutes.json
   def create
     @commute = current_user.commutes.new(commute_params)
-
+    @commute.location.locatable = @commute
     respond_to do |format|
       if @commute.save
         format.html { redirect_to @commute, notice: 'Commute was successfully created.' }
         format.json { render :show, status: :created, location: @commute }
       else
+        byebug
         format.html { render :new }
         format.json { render json: @commute.errors, status: :unprocessable_entity }
       end

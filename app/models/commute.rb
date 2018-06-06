@@ -8,16 +8,15 @@ class Commute < ApplicationRecord
   as: :locatable
   accepts_nested_attributes_for :location 
   has_many :reminders
-  before_create :build_location
-  after_create :generate_daily_on_create
-  before_create :next_occurrence
+#  before_create :build_location
+  after_create :create_benchmark
+#  before_create :next_occurrence
 
-  def generate_daily_on_create
-    if self.duration == nil
-      benchmark = self.create_benchmark
-      self.update(duration: benchmark)
-    end 
-  end
+  # def generate_daily_on_create
+  #   byebug
+  #   benchmark = self.create_benchmark
+  #   self.update(duration: benchmark)
+  # end
 
   def generate_daily
     times = self.schedule.occurrences_between(Date.today.beginning_of_day, (Date.today.end_of_day))
@@ -26,8 +25,13 @@ class Commute < ApplicationRecord
 
   #break this out, find a way to update it as they continue to use. 
   def create_benchmark
+    self.next_occurrence
     r = Reminder.create(commute_id: self.id, start_time: self.next_reminder_date.to_time)
-    travel_duration = r.duration_in_seconds
+    text_time_in_seconds = (r.text_time + 15.minutes).to_i
+    start_time_in_seconds = r.start_time.to_i
+    commute_time = start_time_in_seconds - text_time_in_seconds
+    conservative_estimate = commute_time + (commute_time / 10)
+    self.update_column(:duration, conservative_estimate)
     # times = self.schedule.occurrences_between(Date.today.beginning_of_day, (Date.today.end_of_day + 1.days))
     # today = times.map { |time| Reminder.create(commute_id: self.id, start_time: time.to_time) }
     # previous = self.schedule.previous_occurrence(Time.now)
@@ -41,12 +45,13 @@ class Commute < ApplicationRecord
 
     # commute_times = reminders.map { |r| r.duration_in_seconds }
     # avg_commute_time = (commute_times.reduce(:+) / commute_times.length)
-    conservative_estimate = travel_duration + (travel_duration / 10)
+    # conservative_estimate = travel_duration + (travel_duration / 10)
+    # self.duration = conservative_estimate
   end 
 
   def next_occurrence
     next_reminder = self.schedule.next_occurrence
-    self.update(next_reminder_date: next_reminder)
+    self.update_column(:next_reminder_date, next_reminder)
   end 
 
 end
