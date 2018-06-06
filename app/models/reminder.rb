@@ -1,3 +1,4 @@
+require 'byebug'
 class Reminder < ApplicationRecord
   belongs_to :commute
   delegate :user, to: :commute
@@ -56,7 +57,7 @@ class Reminder < ApplicationRecord
     departure = response["departure_time"]["text"]
     duration_string = response["duration"]["text"]
     duration_seconds = response["duration"]["value"]
-    generate_text_time(duration_seconds)
+    #generate_text_time(duration_seconds)
     start_address = response["start_address"]
     end_address = response["end_address"]
     "You need to leave from #{start_address} at #{departure}. It will take you #{duration_string} to get to #{end_address} at #{arrival_time} \n "
@@ -67,9 +68,9 @@ class Reminder < ApplicationRecord
   def format_text
     response = self.transit_data
     #change this post-MVP, see above notes
-    response = response["routes"][0]["legs"][0]
-    basic = self.format_basic_info(response)
-    instructions = self.format_transit(response).join("\n")
+    directions = response["routes"][0]["legs"][0]
+    basic = self.format_basic_info(directions)
+    instructions = self.format_transit(directions).join("\n")
     return (basic + instructions)
   end
 
@@ -96,17 +97,24 @@ class Reminder < ApplicationRecord
 
   #doesn't work yet
   #set to nil for on create and use Commute's duration, otherwise update it when calling Google (necessary?)
-  def generate_text_time(duration=nil)
+  def generate_text_time
     start = self.start_time
-    if duration == nil
+    if self.commute.duration == nil
+      duration = self.duration_in_seconds
+      # if duration == nil
+      #   duration = self.duration_in_seconds
+      # end
+    else
       duration = self.commute.duration
     end
     time_to_send = (start - duration.seconds - 15.minutes)
     #if reminder 
     if (time_to_send >= Time.now.utc) && (start >= Time.now.utc)
-      self.text_time = time_to_send
+      #self.text_time = time_to_send
+      self.update_column(:text_time, time_to_send)
     elsif start >= Time.now.utc
-      self.text_time = Time.now
+      #self.text_time = Time.now
+      self.update_column(:text_time, Time.now)
     else
       Reminder.find(self.id).destroy
       return nil

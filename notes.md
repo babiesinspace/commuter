@@ -1,3 +1,5 @@
+web: bundle exec puma -C config/puma.rb config.ru
+
 commutes = Commute.all.map { |c| {id: c.id, commutes: c.schedule.occurrences_between(Time.now, (Time.now + 1.day))} }
   Commute Load (0.5ms)  SELECT "commutes".* FROM "commutes"
   Schedule Load (0.8ms)  SELECT  "schedules".* FROM "schedules" WHERE "schedules"."schedulable_id" = $1 AND "schedules"."schedulable_type" = $2 LIMIT $3  [["schedulable_id", 3], ["schedulable_type", "Commute"], ["LIMIT", 1]]

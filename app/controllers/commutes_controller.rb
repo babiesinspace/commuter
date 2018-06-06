@@ -1,10 +1,18 @@
 class CommutesController < ApplicationController
   before_action :set_commute, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!, except: [:landing]
+
+  def landing
+    if current_user
+      redirect_to commutes_path
+    end 
+  end 
 
   # GET /commutes
   # GET /commutes.json
   def index
-    @commutes = Commute.all
+    @user = User.find(current_user.id)
+    @commutes = @user.commutes 
   end
 
   # GET /commutes/1
@@ -14,7 +22,8 @@ class CommutesController < ApplicationController
 
   # GET /commutes/new
   def new
-    @commute = Commute.new
+    @commute = current_user.commutes.new
+    @commute.build_location
   end
 
   # GET /commutes/1/edit
@@ -24,13 +33,14 @@ class CommutesController < ApplicationController
   # POST /commutes
   # POST /commutes.json
   def create
-    @commute = Commute.new(commute_params)
-
+    @commute = current_user.commutes.new(commute_params)
+    @commute.location.locatable = @commute
     respond_to do |format|
       if @commute.save
         format.html { redirect_to @commute, notice: 'Commute was successfully created.' }
         format.json { render :show, status: :created, location: @commute }
       else
+        byebug
         format.html { render :new }
         format.json { render json: @commute.errors, status: :unprocessable_entity }
       end
@@ -64,6 +74,7 @@ class CommutesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_commute
+      @user = current_user
       @commute = Commute.find(params[:id])
     end
 

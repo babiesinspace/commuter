@@ -1,27 +1,27 @@
 <p id="notice"><%= notice %></p>
+<div class="container justify-content-center">
+  <h1 class="text-center">Your Commutes</h1>
 
-<h1>Commutes</h1>
+  <% @commutes.each do |commute| %>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><strong><%= commute.label.capitalize %></strong></h5>
+            <h5 class="card-subtitle mb-2"><%= commute.schedule %></h6>
+            <p class="card-text">Next Reminder: <%= commute.next_reminder_date.localtime.strftime("%m/%d/%Y at %I:%M%p") %></p>
+            <p class="card-text">From: <%= current_user.location.address %></p>
+            <p class="card-text">To: <%= commute.location.address %></p>
+            <%= link_to 'Edit', edit_commute_path(commute), class: "card-link" %> |
+            <%= link_to 'Back', commutes_path, class: "card-link" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Label</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+  <br>
 
-  <tbody>
-    <% @commutes.each do |commute| %>
-      <tr>
-        <td><%= commute.label %></td>
-        <td><%= link_to 'Show', commute %></td>
-        <td><%= link_to 'Edit', edit_commute_path(commute) %></td>
-        <td><%= link_to 'Destroy', commute, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Commute', new_commute_path %>
+  <%= link_to 'New Commute', new_commute_path %>
+  
+</div>

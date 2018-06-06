@@ -4,6 +4,25 @@
   <strong>Label:</strong>
   <%= @commute.label %>
 </p>
-
+<p>
+  <strong>Schedule:</strong>
+  <%# Prints out a human-friendly description of the schedule, such as %> 
+  <%= @commute.schedule %>
+</p>
+<p>
+  <strong>Next Reminder:</strong>
+  <%# Prints out a human-friendly description of the schedule, such as %> 
+  <%= @commute.next_reminder_date.localtime.strftime("%m/%d/%Y at %I:%M%p") %>
+</p>
+<p>
+  <strong>From:</strong>
+  <%# Prints out a human-friendly description of the schedule, such as %> 
+  <%= current_user.location.address %>
+</p>
+<p>
+  <strong>To:</strong>
+  <%# Prints out a human-friendly description of the schedule, such as %> 
+  <%= @commute.location.address %>
+</p>
 <%= link_to 'Edit', edit_commute_path(@commute) %> |
 <%= link_to 'Back', commutes_path %>

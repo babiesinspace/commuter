@@ -1,0 +1,49 @@
+<header class="masthead d-flex">
+  <div class="container text-center my-auto">
+    <h1 class="mb-1">Welcome to Commuter</h1>
+    <h3 class="mb-5">
+      <em>Tell us where and when, we'll get you there</em>
+    </h3>
+  </div>
+
+</header>
+
+<!-- About -->
+<section class="content-section" id="about">
+  <div class="container text-center">
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+        <h2>How It Works</h2><br />
+        <p class="lead mb-5">When you're running late, the last thing you want to do is open up your phone to check your commute. For the habitually tardy, this can mean opening up your map every day, wasting precious time!</p>
+        <p class="lead mb-5">The app is simple. Log in, tell it where you live, where you work, and what time you need to be there. From then on, you'll receive a text every day 15 minutes before you need to leave, with updated transit information. That's it!</p>
+        <!-- <a class="btn btn-dark btn-xl js-scroll-trigger" href="#services">What We Offer</a> -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content-section" id="technical">
+  <div class="container text-center">
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+        <h2>How It REALLY Works</h2>
+        <p class="lead mb-5">On its surface, this app seems simple. However there is a lot going on under the hood. Devise is used for authentication due to the sensitive nature of the the user's data we're asking for. When a commute or a user is created, their address is geocoded and the respective latitude and longitute stored.<br> When a user makes a commute, their schedule is saved as a ruleset. The benchmark for how long their commute will take is generated, and stored to give reference to when to send a text reminder. Every night, the app will find all of the people who are going to work that day and store them, as well as the time their reminder text needs to be sent (<em>the time the need to be there - the time it takes to get there - 15 minutes</em>).<br> Then every hour, the app finds all the reminders that need to go out, and sets the schedule for when to start generating their text. When it's their turn, a call is made to Google, the response is formatted, and the text sent to the user.</p>
+        <p class="lead mb-5">
+        This app relies on the following technologies, and would like to thank them for their services:<br> 
+        APIs: Google Maps, Twilio <br>
+        Gems: IceCube, Schedulable, Geocoder, HTTParty, Devise <br>
+        Databases: Postgresql, Redis <br>
+        Background Task Configuration: Resque, Resque-Scheduler, Foreman<br>
+        Written in Ruby on Rails, Hosted on Heroku 
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer text-center">
+  <div class="container">
+    <p class="text-muted small mb-0">Copyright &copy; Commuter 2018</p>
+  </div>
+</footer>

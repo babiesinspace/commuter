@@ -1,8 +1,9 @@
-<%= form_for @commute do |f| %>
+
+
+<%= form_for @commute, html: {class: "form-signin"} do |f| %>
   <% if @commute.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@commute.errors.count, "error") %> prohibited this @commute from being saved:</h2>
-
       <ul>
       <% @commute.errors.full_messages.each do |message| %>
         <li><%= message %></li>
@@ -11,27 +12,26 @@
     </div>
   <% end %>
 
-
+  <h2 class="form-signin-heading">Tell Us About Your Commute</h2>
 
   <div class="field">
-    <%= f.label :label %>
-    <%= f.text_field :label %>
+    <%= f.label :label, class: 'sr-only' %>
+    <%= f.text_field :label, class: 'form-control', placeholder: "Name this Commute" %>
   </div>
 
   <div class="field">
-    <%= f.label :schedule %><br>
-    <%= f.schedule_select :schedule %>
+    <%= f.label :schedule, class: 'sr-only' %><br>
+    <%= f.schedule_select :schedule, class: 'form-control' %>
   </div>
 
   <%= f.fields_for :location, Location.new do |location_form| %>
 
     <div class="field">
-        <%= location_form.label :address %>
-        <%= location_form.text_field :address %>
+        <%= location_form.label :address, class: 'sr-only' %>
+        <%= location_form.text_field :address, class: 'form-control', placeholder: "Where are you headed? Address with City, State & Zip please" %>
     </div>
   <% end %>
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+  <%= f.button "Add this Commute", class: 'btn btn-lg btn-primary btn-block' %>
 <% end %>
+<%= link_to 'Back', commutes_path %>
