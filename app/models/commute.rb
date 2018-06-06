@@ -10,7 +10,7 @@ class Commute < ApplicationRecord
   has_many :reminders
 #  before_create :build_location
   after_create :create_benchmark
-#  before_create :next_occurrence
+  after_save :next_occurrence
 
   # def generate_daily_on_create
   #   byebug
