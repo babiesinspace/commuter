@@ -16,7 +16,7 @@
 
     <div class="field">
       <%= f.label :label, class: 'sr-only' %>
-      <%= f.text_field :label, class: 'form-control' %>
+      <%= f.text_field :label, class: 'form-control', placeholder: "Name this Commute" %>
     </div>
 
     <div class="field">
@@ -28,7 +28,7 @@
 
       <div class="field">
           <%= location_form.label :address, class: 'sr-only' %>
-          <%= location_form.text_field :address, class: 'form-control' %>
+          <%= location_form.text_field :address, class: 'form-control', placeholder: "Where are you headed? Address with City, State & Zip please" %>
       </div>
     <% end %>
 
