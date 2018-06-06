@@ -56,7 +56,7 @@ class Reminder < ApplicationRecord
     departure = response["departure_time"]["text"]
     duration_string = response["duration"]["text"]
     duration_seconds = response["duration"]["value"]
-    generate_text_time(duration_seconds)
+    #generate_text_time(duration_seconds)
     start_address = response["start_address"]
     end_address = response["end_address"]
     "You need to leave from #{start_address} at #{departure}. It will take you #{duration_string} to get to #{end_address} at #{arrival_time} \n "
@@ -96,9 +96,14 @@ class Reminder < ApplicationRecord
 
   #doesn't work yet
   #set to nil for on create and use Commute's duration, otherwise update it when calling Google (necessary?)
-  def generate_text_time(duration=nil)
+  def generate_text_time
     start = self.start_time
-    if duration == nil
+    if self.commute.duration == nil
+      duration = self.duration_in_seconds
+      # if duration == nil
+      #   duration = self.duration_in_seconds
+      # end
+    else
       duration = self.commute.duration
     end
     time_to_send = (start - duration.seconds - 15.minutes)

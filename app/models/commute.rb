@@ -8,11 +8,15 @@ class Commute < ApplicationRecord
   as: :locatable
   accepts_nested_attributes_for :location 
   has_many :reminders
-  after_create :generate_daily_on_create, :next_occurrence
+  before_create :build_location
+  after_create :generate_daily_on_create
+  before_create :next_occurrence
 
   def generate_daily_on_create
-    benchmark = self.create_benchmark
-    self.update(duration: benchmark)
+    if self.duration == nil
+      benchmark = self.create_benchmark
+      self.update(duration: benchmark)
+    end 
   end
 
   def generate_daily
@@ -22,20 +26,22 @@ class Commute < ApplicationRecord
 
   #break this out, find a way to update it as they continue to use. 
   def create_benchmark
-    times = self.schedule.occurrences_between(Date.today.beginning_of_day, (Date.today.end_of_day + 1.days))
-    today = times.map { |time| Reminder.create(commute_id: self.id, start_time: time.to_time) }
-    previous = self.schedule.previous_occurrence(Time.now)
+    r = Reminder.create(commute_id: self.id, start_time: self.next_reminder_date.to_time)
+    travel_duration = r.duration_in_seconds
+    # times = self.schedule.occurrences_between(Date.today.beginning_of_day, (Date.today.end_of_day + 1.days))
+    # today = times.map { |time| Reminder.create(commute_id: self.id, start_time: time.to_time) }
+    # previous = self.schedule.previous_occurrence(Time.now)
     
-    if today.first.start_time == previous.to_time
-      previous = previous - 1.week
-    end    
+    # if today.first.start_time == previous.to_time
+    #   previous = previous - 1.week
+    # end    
 
-    previous_reminder = Reminder.create(commute_id: self.id, start_time: previous.to_time)
-    reminders = today.push(previous_reminder)
+    # previous_reminder = Reminder.create(commute_id: self.id, start_time: previous.to_time)
+    # reminders = today.push(previous_reminder)
 
-    commute_times = reminders.map { |r| r.duration_in_seconds }
-    avg_commute_time = (commute_times.reduce(:+) / commute_times.length)
-    conservative_estimate = avg_commute_time + (avg_commute_time / 10)
+    # commute_times = reminders.map { |r| r.duration_in_seconds }
+    # avg_commute_time = (commute_times.reduce(:+) / commute_times.length)
+    conservative_estimate = travel_duration + (travel_duration / 10)
   end 
 
   def next_occurrence

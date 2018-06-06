@@ -32,7 +32,7 @@ class CommutesController < ApplicationController
   # POST /commutes
   # POST /commutes.json
   def create
-    @commute = current_user.build_commute(commute_params)
+    @commute = current_user.commutes.new(commute_params)
 
     respond_to do |format|
       if @commute.save
