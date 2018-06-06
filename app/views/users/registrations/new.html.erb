@@ -6,6 +6,20 @@
     <%= f.email_field :email, autofocus: true, class: 'form-control', placeholder: 'Email Address' %>
 
       <div class="field">
+        <%= f.label :phonenumber %><br />
+        <%= f.telephone_field :phonenumber %>
+      </div>
+
+      <div class="field">
+        <%= f.label "Address" %><br />
+        <%= f.fields_for :location, Location.new do |location_form| %>
+
+              <%= location_form.label :address, class: 'sr-only' %>
+              <%= location_form.text_field :address, class: 'form-control' %>
+        <% end %>
+      </div>
+
+      <div class="field">
         <%= f.label :password, class: 'sr-only' %>
         <% if @minimum_password_length %>
         <em>(<%= @minimum_password_length %> characters minimum)</em>
