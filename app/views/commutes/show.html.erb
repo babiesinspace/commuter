@@ -9,11 +9,13 @@
   <%# Prints out a human-friendly description of the schedule, such as %> 
   <%= @commute.schedule %>
 </p>
-<p>
-  <strong>Next Reminder:</strong>
-  <%# Prints out a human-friendly description of the schedule, such as %> 
-  <%= @commute.next_reminder_date.localtime.strftime("%m/%d/%Y at %I:%M%p") %>
-</p>
+<% if @commute.next_reminder_date != nil %>
+  <p>
+    <strong>Next Reminder:</strong>
+    <%# Prints out a human-friendly description of the schedule, such as %> 
+    <%= @commute.next_reminder_date.localtime.strftime("%m/%d/%Y at %I:%M%p") %>
+  </p>
+<% end %>
 <p>
   <strong>From:</strong>
   <%# Prints out a human-friendly description of the schedule, such as %> 
