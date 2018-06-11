@@ -1,5 +1,4 @@
 SetReminderTimeJob:
   description: "desc"
-  queue: set_reminders
-  class: "SetReminderTimeJob"
-  every: "30m"
+  queue: send_reminder_text
+  class: "SendTextJob"
