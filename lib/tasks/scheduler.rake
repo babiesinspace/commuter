@@ -16,3 +16,7 @@ end
 task :nightly_commute_job => [ :environment ] do
     CommuteJob.perform_later
 end
+
+task :send_reminders => [ :environment ] do
+    SendTextJob.perform_later
+end

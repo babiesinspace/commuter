@@ -1,4 +1,0 @@
-SetReminderTimeJob:
-  description: "desc"
-  queue: send_reminder_text
-  class: "SendTextJob"
