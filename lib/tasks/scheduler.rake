@@ -4,7 +4,7 @@ task :schedule_and_work => [ :environment ] do
   if Process.fork
     sh "rake environment resque:work"
   else
-    sh "rake resque:scheduler"
+    sh "rake resque:scheduler RAILS_ENV=production"
     Process.wait
   end
 end
